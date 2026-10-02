@@ -1,0 +1,246 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+    scroll-behavior: smooth;
+  }
+
+  * {
+    @apply border-ink-line/60;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-padding-top: 6rem; /* clears the sticky navbar on anchor jumps */
+  }
+
+  body {
+    @apply bg-white font-sans text-body antialiased;
+    overflow-x: hidden;
+  }
+
+  /* Sensible default heading treatment for the whole site */
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply text-ink;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Visible, consistent focus ring for keyboard users everywhere */
+  :focus-visible {
+    @apply outline-none ring-2 ring-brand-500 ring-offset-2 ring-offset-white;
+  }
+
+  .on-dark :focus-visible {
+    @apply ring-brand-400 ring-offset-ink;
+  }
+
+  ::selection {
+    @apply bg-brand-500/25 text-ink;
+  }
+
+  /* Subtle scrollbar that matches the brand rather than the OS default */
+  @media (min-width: 768px) {
+    ::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f5f8ff;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #c7d5f0;
+      border-radius: 999px;
+      border: 2px solid #f5f8ff;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #9db8e8;
+    }
+  }
+}
+
+@layer components {
+  /* ---- Layout helpers ---- */
+  .container-page {
+    @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-10;
+  }
+
+  .section-y {
+    @apply py-20 md:py-28;
+  }
+
+  /* ---- Eyebrow / section label ---- */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full border border-brand-500/20 bg-brand-500/10 px-3.5 py-1.5 text-[0.7rem] font-semibold uppercase tracking-[0.18em] text-brand-600;
+  }
+
+  .eyebrow-dark {
+    @apply border-white/12 bg-white/[0.06] text-brand-200;
+  }
+
+  /* ---- Gradient text ---- */
+  .text-gradient {
+    @apply bg-brand-gradient bg-clip-text text-transparent;
+  }
+
+  /* ---- Glass surfaces ---- */
+  .glass-dark {
+    background: linear-gradient(155deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.025) 100%);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    @apply border border-white/10;
+  }
+
+  .glass-light {
+    background: linear-gradient(155deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.72) 100%);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    @apply border border-white/70;
+  }
+
+  /* ---- Buttons ---- */
+  .btn {
+    @apply inline-flex select-none items-center justify-center gap-2 rounded-full text-sm font-semibold transition duration-200 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-60;
+  }
+
+  .btn-md {
+    @apply px-6 py-3;
+  }
+
+  .btn-lg {
+    @apply px-7 py-3.5 text-[0.95rem];
+  }
+
+  .btn-primary {
+    @apply bg-brand-gradient text-white shadow-[0_14px_34px_-14px_rgba(52,120,246,0.75)] hover:brightness-110 hover:shadow-[0_18px_44px_-14px_rgba(128,84,246,0.85)];
+  }
+
+  .btn-ghost-light {
+    @apply border border-ink/12 bg-white text-ink hover:border-ink/25 hover:bg-mist;
+  }
+
+  .btn-ghost-dark {
+    @apply border border-white/18 bg-white/[0.04] text-white hover:border-white/35 hover:bg-white/10;
+  }
+
+  /* ---- Cards ---- */
+  .card {
+    @apply rounded-3xl border border-ink/[0.07] bg-white shadow-soft transition duration-300;
+  }
+
+  .card-hover {
+    @apply hover:-translate-y-1.5 hover:border-brand-500/25 hover:shadow-lift;
+  }
+
+  /* Gradient hairline border rendered with a mask, so the card body stays clean */
+  .gradient-border {
+    position: relative;
+  }
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(52, 120, 246, 0.55), rgba(128, 84, 246, 0.45) 55%, rgba(52, 120, 246, 0));
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  .gradient-border:hover::before,
+  .gradient-border:focus-within::before {
+    opacity: 1;
+  }
+
+  /* ---- Form controls ---- */
+  .field {
+    @apply w-full rounded-2xl border border-ink/[0.12] bg-white px-4 py-3 text-[0.95rem] text-ink transition-colors duration-200 placeholder:text-slate-400 hover:border-ink/20 focus:border-brand-500/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30 focus-visible:ring-offset-0;
+  }
+
+  .field-invalid {
+    @apply border-red-400 bg-red-50/50 hover:border-red-400;
+  }
+
+  .field-label {
+    @apply mb-2 flex items-center gap-1.5 text-[0.85rem] font-semibold text-ink;
+  }
+
+  .field-error {
+    @apply mt-1.5 flex items-start gap-1.5 text-[0.82rem] font-medium text-red-600;
+  }
+
+  /* Required-field dot — paired with the word "required" for screen readers,
+     so meaning is never carried by colour alone. */
+  .field-required {
+    @apply inline-block h-1.5 w-1.5 rounded-full bg-brand-500;
+  }
+
+  /* ---- Decorative helpers ---- */
+  .bg-dot-grid {
+    background-image: radial-gradient(rgba(8, 13, 25, 0.07) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  .bg-grid-overlay {
+    @apply bg-grid-dark bg-[size:56px_56px];
+    mask-image: radial-gradient(ellipse 75% 65% at 50% 40%, #000 35%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 75% 65% at 50% 40%, #000 35%, transparent 100%);
+  }
+
+  .divider-gradient {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-brand-500/25 to-transparent;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Anything the user cannot perceive should not be read by AT either */
+  .sr-only-focusable:not(:focus):not(:focus-within) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+}
+
+/* Honour the OS-level reduced-motion preference: kill decorative motion,
+   keep opacity/colour feedback that communicates state. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
